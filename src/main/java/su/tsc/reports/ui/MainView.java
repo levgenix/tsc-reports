@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Route;
 //@CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
 public class MainView extends VerticalLayout {
 
+    final static long serialVersionUID = 2356040513043504611L;
     public MainView() {
 
     }

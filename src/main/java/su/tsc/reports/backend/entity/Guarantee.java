@@ -25,11 +25,11 @@ public class Guarantee {
         this.guaranteeLetter = guaranteeLetter;
     }
 
-    public boolean isOnGuarantee() {
+    public boolean isGuarantee() {
         return onGuarantee;
     }
 
-    public void setOnGuarantee(boolean onGuarantee) {
+    public void setGuarantee(boolean onGuarantee) {
         this.onGuarantee = onGuarantee;
     }
 

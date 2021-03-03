@@ -1,12 +1,10 @@
 package su.tsc.reports.backend.entity;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 // Счетчик
 @Embeddable
@@ -14,8 +12,7 @@ import java.util.Date;
 public class Counter {
 
     @Column(name = "counter_date_fixing")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date dateFixing;
+    private OffsetDateTime dateFixing;
 
     @Column(name = "counter_last_value", nullable = true)
     private float lastValue;
@@ -24,16 +21,16 @@ public class Counter {
 
     }
 
-    public Counter(Date date, float value) {
+    public Counter(OffsetDateTime date, float value) {
         dateFixing = date;
         lastValue = value;
     }
 
-    public Date getDateFixing() {
+    public OffsetDateTime getDateFixing() {
         return dateFixing;
     }
 
-    public void setDateFixing(Date dateFixing) {
+    public void setDateFixing(OffsetDateTime dateFixing) {
         this.dateFixing = dateFixing;
     }
 

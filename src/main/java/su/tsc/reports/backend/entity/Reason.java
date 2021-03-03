@@ -1,7 +1,7 @@
 package su.tsc.reports.backend.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 // Причина отсутствия контракта/обслуживания/обновления счётчика
 @Embeddable
@@ -9,7 +9,7 @@ import java.util.Date;
 public class Reason {
     // Дата причины
     @Column(name = "date_reason", nullable = true)
-    private Date date;
+    private OffsetDateTime date;
 
     // Автор причины
     @ManyToOne(fetch = FetchType.EAGER)
@@ -24,17 +24,17 @@ public class Reason {
 
     }
 
-    public Reason(Date dateReason, Emploee author, String reasonMessage) {
+    public Reason(OffsetDateTime dateReason, Emploee author, String reasonMessage) {
         date = dateReason;
         this.author = author;
         message = reasonMessage;
     }
 
-    public Date getDate() {
+    public OffsetDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(OffsetDateTime date) {
         this.date = date;
     }
 

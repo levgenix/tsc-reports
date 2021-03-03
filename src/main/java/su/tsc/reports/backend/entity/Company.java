@@ -8,8 +8,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "company")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Company extends AbstractEntity implements Cloneable {
-    @NotNull
-    @NotEmpty
     @Column(unique = true)
     private String name;
 

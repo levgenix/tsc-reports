@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 // Сведения по обслуживанию
 @Embeddable
@@ -12,7 +12,7 @@ import java.util.Date;
 public class ServiceData {
     // Дата последнего ТО
     @Column(name = "last_date_service")
-    private Date lastDateService;
+    private OffsetDateTime lastDateService;
 
     // Кол ТО план
     @Column(name = "plan_service_count", nullable = true)
@@ -29,18 +29,18 @@ public class ServiceData {
     public ServiceData() {
     }
 
-    public ServiceData(Date dateService, int planCount, int factCount, boolean isServed) {
+    public ServiceData(OffsetDateTime dateService, int planCount, int factCount, boolean isServed) {
         this.lastDateService = dateService;
         this.planServiceCount = planCount;
         this.factServiceCount = factCount;
         this.isServed = isServed;
     }
 
-    public Date getLastDateService() {
+    public OffsetDateTime getLastDateService() {
         return lastDateService;
     }
 
-    public void setLastDateService(Date lastDateService) {
+    public void setLastDateService(OffsetDateTime lastDateService) {
         this.lastDateService = lastDateService;
     }
 

@@ -3,12 +3,14 @@ package su.tsc.reports.backend.service;
 import org.apache.commons.io.FileExistsException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import su.tsc.reports.backend.entity.*;
 import su.tsc.reports.backend.repository.*;
+import su.tsc.reports.util.DateTimeUtil;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -18,9 +20,8 @@ import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +32,7 @@ import java.util.stream.Stream;
 @PropertySource("classpath:values.properties")
 public class UnitService {
     private static final Logger LOGGER = Logger.getLogger(UnitService.class.getName());
+
     private UnitRepository unitRepository;
     private ModelRepository modelRepository;
     private BrandRepository brandRepository;
@@ -59,6 +61,14 @@ public class UnitService {
         return unitRepository.findAll();
     }
 
+    public List<Unit> findAll(String stringFilter) {
+        if (stringFilter == null || stringFilter.isEmpty()) {
+            return this.findAll();
+        } else {
+            return unitRepository.search(stringFilter);
+        }
+    }
+
     public long count() {
         return unitRepository.count();
     }
@@ -75,7 +85,7 @@ public class UnitService {
         unitRepository.save(unit);
     }
 
-    @PostConstruct
+    //@PostConstruct
     private void loadDataFromCSVFile() {
         try {
             Path path = getPathToFile(fileInput);
@@ -116,10 +126,13 @@ public class UnitService {
         }
         return path;
     }
-
+    @PostMapping("/local-date")
+    public void localDate(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate localDate) {
+        // ...
+    }
     /**
      * @param line tab-separated String
-     * First line in file in header
+     * First line in file is header
      * Structure of line:
      * Серийный номер
      * Модель
@@ -153,31 +166,27 @@ public class UnitService {
         Unit unit = new Unit();
 
         unit.setSerial(tokens[0]);
+
         unit.setModel(modelRepository.findByName(tokens[1]).stream().findFirst()
                 .orElseGet(() -> modelRepository.save(new Model(tokens[1]))));
+
         unit.setBrand(brandRepository.findByName(tokens[2]).stream().findFirst()
                 .orElseGet(() -> brandRepository.save(new Brand(tokens[2]))));
+
         unit.setBranch(branchRepository.findByName(tokens[3]).stream().findFirst()
                 .orElseGet(() -> branchRepository.save(new Branch(tokens[3]))));
+
         unit.setCurator(emploeeRepository.findByName(tokens[4]).stream().findFirst()
                 .orElseGet(() -> emploeeRepository.save(new Emploee(tokens[4]))));
+
         unit.setResponsible(emploeeRepository.findByName(tokens[5]).stream().findFirst()
                 .orElseGet(() -> emploeeRepository.save(new Emploee(tokens[5]))));
+
         unit.setOwner(companyRepository.findByName(tokens[6]).stream().findFirst()
                 .orElseGet(() -> companyRepository.save(new Company(tokens[6]))));
 
-        try {
-            unit.setShipmentDate(new SimpleDateFormat("yyyy-MM-dd").parse(tokens[7]));
-        } catch (ParseException e) {
-            unit.setShipmentDate(null);
-        }
+        unit.setShipmentDate(DateTimeUtil.StringToOffsetDateTime(tokens[7]));
 
-        Date dateFixing;
-        try {
-            dateFixing = new SimpleDateFormat("yyyy-MM-dd").parse(tokens[9]);
-        } catch (ParseException e) {
-            dateFixing = null;
-        }
         DecimalFormatSymbols symbols = new DecimalFormatSymbols();
         symbols.setDecimalSeparator(',');
         DecimalFormat format = new DecimalFormat("0.#");
@@ -188,27 +197,26 @@ public class UnitService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        unit.setCounter(new Counter(dateFixing, counterLastValue));
+        unit.setCounter(new Counter(DateTimeUtil.StringToOffsetDateTime(tokens[9]), counterLastValue));
 
         if (!tokens[10].isEmpty()) {
             unit.setBuyer(companyRepository.findByName(tokens[10]).stream().findFirst()
                     .orElseGet(() -> companyRepository.save(new Company(tokens[10]))));
         }
 
-        Date lastServiceDate;
-        try {
-            lastServiceDate = new SimpleDateFormat("yyyy-MM-dd").parse(tokens[11]);
-        } catch (ParseException e) {
-            lastServiceDate = null;
-        }
-        unit.setServiceData(new ServiceData(lastServiceDate, tokens[12].isEmpty() ? 0 : Integer.parseInt(tokens[12]),
+        unit.setServiceData(new ServiceData(DateTimeUtil.StringToOffsetDateTime(tokens[11]),
+                tokens[12].isEmpty() ? 0 : Integer.parseInt(tokens[12]),
                 tokens[13].isEmpty() ? 0 : Integer.parseInt(tokens[13]), "Да".equals(tokens[13])));
 
         unit.setGuarantee(new Guarantee("Да".equals(tokens[15]), tokens[21]));
-        unit.setHasContract("Да".equals(tokens[16]));
+
+        unit.setContract("Да".equals(tokens[16]));
+
         unit.setConnection(new Connection(tokens[17].isEmpty() ? 0 : Integer.parseInt(tokens[17]),
                 tokens[18].isEmpty() ? 0 : Integer.parseInt(tokens[18])));
+
         unit.setRepair(new Repair(tokens[19].isEmpty() ? 0 : Integer.parseInt(tokens[19]), tokens[20]));
+
         unit.setReason(new Reason(null, null, tokens[23]));
 
         return unit;

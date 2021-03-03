@@ -1,11 +1,9 @@
 package su.tsc.reports.backend.entity;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "unit")
@@ -43,12 +41,12 @@ public class Unit extends AbstractEntity implements Cloneable {
     private Company owner;
 
     @Column(name = "shipment_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date shipmentDate;
+    private OffsetDateTime shipmentDate;
 
     @Embedded
     private Counter counter;
 
+    // Плательщик
     @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "buyer_id")
     private Company buyer;
@@ -73,28 +71,6 @@ public class Unit extends AbstractEntity implements Cloneable {
 
     public Unit() {
 
-    }
-
-    public Unit(String serial, Model model, Brand brand, Branch branch, Emploee curator,
-                Emploee responsible, Company owner, Date shipmentDate, Counter counter,
-                Company buyer, ServiceData serviceData, Guarantee guarantee, boolean hasContract,
-                Connection connection, Repair repair, Reason reason) {
-        this.serial = serial;
-        this.model = model;
-        this.brand = brand;
-        this.branch = branch;
-        this.curator = curator;
-        this.responsible = responsible;
-        this.owner = owner;
-        this.shipmentDate = shipmentDate;
-        this.counter = counter;
-        this.buyer = buyer;
-        this.serviceData = serviceData;
-        this.guarantee = guarantee;
-        this.hasContract = hasContract;
-        this.connection = connection;
-        this.repair = repair;
-        this.reason = reason;
     }
 
     public String getSerial() {
@@ -153,12 +129,12 @@ public class Unit extends AbstractEntity implements Cloneable {
         this.owner = owner;
     }
 
-    public Date getShipmentDate() {
+    public OffsetDateTime getShipmentDate() {
         return shipmentDate;
     }
 
-    public void setShipmentDate(Date shipmentDate) {
-        this.shipmentDate = shipmentDate;
+    public void setShipmentDate(OffsetDateTime date) {
+        this.shipmentDate = date;
     }
 
     public Counter getCounter() {
@@ -193,11 +169,11 @@ public class Unit extends AbstractEntity implements Cloneable {
         this.guarantee = guarantee;
     }
 
-    public boolean isHasContract() {
+    public boolean hasContract() {
         return hasContract;
     }
 
-    public void setHasContract(boolean hasContract) {
+    public void setContract(boolean hasContract) {
         this.hasContract = hasContract;
     }
 

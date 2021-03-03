@@ -9,9 +9,11 @@ import java.util.List;
 @Service
 public class EmploeeService {
     private EmploeeRepository emploeeRepository;
+
     public EmploeeService(EmploeeRepository emploeeRepository) {
         this.emploeeRepository = emploeeRepository;
     }
+
     public List<Emploee> findAll() {
         return emploeeRepository.findAll();
     }

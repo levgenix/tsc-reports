@@ -1,15 +1,16 @@
 package su.tsc.reports.backend.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "model")
+@javax.persistence.Entity
+@javax.persistence.Table(name = "model")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Model extends AbstractEntity implements Cloneable {
     @NotNull
     @NotEmpty
+    @Column(unique = true)
     private String name;
 
     public Model() {
@@ -20,13 +21,16 @@ public class Model extends AbstractEntity implements Cloneable {
         this.name = name;
     }
 
-    // todo
     public String getName() {
         return name;
     }
 
-    // todo
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Model { " + "id=" + id + " name=" + name + " }";
     }
 }

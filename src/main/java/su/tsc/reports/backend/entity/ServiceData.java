@@ -2,25 +2,28 @@ package su.tsc.reports.backend.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import java.util.Date;
 
 // Сведения по обслуживанию
 @Embeddable
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class ServiceData {
     // Дата последнего ТО
     @Column(name = "last_date_service")
     private Date lastDateService;
 
     // Кол ТО план
-    @Column(name = "plan_service_count")
+    @Column(name = "plan_service_count", nullable = true)
     private int planServiceCount;
 
     // Кол ТО факт
-    @Column(name = "fact_service_count")
+    @Column(name = "fact_service_count", nullable = true)
     private int factServiceCount;
 
     // на обслуживании?
-    @Column(name = "is_served")
+    @Column(name = "is_served", nullable = false)
     private boolean isServed;
 
     public ServiceData() {

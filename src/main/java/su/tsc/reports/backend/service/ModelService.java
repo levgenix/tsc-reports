@@ -9,9 +9,11 @@ import java.util.List;
 @Service
 public class ModelService {
     private ModelRepository modelRepository;
+
     public ModelService(ModelRepository modelRepository) {
         this.modelRepository = modelRepository;
     }
+
     public List<Model> findAll() {
         return modelRepository.findAll();
     }

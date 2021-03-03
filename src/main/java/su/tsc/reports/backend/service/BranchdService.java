@@ -9,9 +9,11 @@ import java.util.List;
 @Service
 public class BranchdService {
     private BranchRepository branchRepository;
+
     public BranchdService(BranchRepository branchRepository) {
         this.branchRepository = branchRepository;
     }
+
     public List<Branch> findAll() {
         return branchRepository.findAll();
     }

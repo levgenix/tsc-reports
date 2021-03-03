@@ -1,5 +1,7 @@
 package su.tsc.reports.backend.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -7,6 +9,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "unit")
+//@Table(name = "unit", uniqueConstraints = {@UniqueConstraint(columnNames = {"id_1" , "id_2"})}, indexes = {})
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Unit extends AbstractEntity implements Cloneable {
     @NotNull
     @NotEmpty
@@ -26,12 +30,12 @@ public class Unit extends AbstractEntity implements Cloneable {
     private Branch branch;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "curator_id")
+    @JoinColumn(name = "curator_id", nullable = true)
     private Emploee curator;
 
     // ответственный
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "responsible_id")
+    @JoinColumn(name = "responsible_id", nullable = true)
     private Emploee responsible;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -39,12 +43,13 @@ public class Unit extends AbstractEntity implements Cloneable {
     private Company owner;
 
     @Column(name = "shipment_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date shipmentDate;
 
     @Embedded
     private Counter counter;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(name = "buyer_id")
     private Company buyer;
 

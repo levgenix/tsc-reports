@@ -2,9 +2,12 @@ package su.tsc.reports.backend.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 // Взаимодействие
 @Embeddable
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Connection {
     // Звонки
     @Column(name = "calls_count")

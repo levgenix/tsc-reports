@@ -2,24 +2,27 @@ package su.tsc.reports.backend.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 
 @Embeddable
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Guarantee {
-    // onGuarantee
-    @Column(name = "on_guarantee")
+    // на гарантии?
+    @Column(name = "on_guarantee", nullable = false)
     private boolean onGuarantee;
 
-    // documentLink на Письмо-уведомление о снятии с гарантии
-    @Column(name = "link_to_letter")
-    private String linkToLetter;
+    // ссылка на Письмо-уведомление о снятии с гарантии
+    @Column(name = "guarantee_letter", length = 1400)
+    private String guaranteeLetter;
 
     public Guarantee() {
 
     }
 
-    public Guarantee(boolean onGuarantee, String guaranteeLink) {
+    public Guarantee(boolean onGuarantee, String guaranteeLetter) {
         this.onGuarantee = onGuarantee;
-        linkToLetter = guaranteeLink;
+        this.guaranteeLetter = guaranteeLetter;
     }
 
     public boolean isOnGuarantee() {
@@ -30,11 +33,11 @@ public class Guarantee {
         this.onGuarantee = onGuarantee;
     }
 
-    public String getLinkToLetter() {
-        return linkToLetter;
+    public String getGuaranteeLetter() {
+        return guaranteeLetter;
     }
 
-    public void setLinkToLetter(String linkToLetter) {
-        this.linkToLetter = linkToLetter;
+    public void setGuaranteeLetter(String guaranteeLetter) {
+        this.guaranteeLetter = guaranteeLetter;
     }
 }
